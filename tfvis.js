@@ -27,13 +27,7 @@ d3.json("dataJSON2.json").then(function (treeData) {
         .style("cursor", "pointer")
         .on("click", () => zoom(root));
 
-    // svg.append("g")
-    //     .append("text")
-    //     .style("font", "10px sans-serif")
-    //     .attr("pointer-events", "none")
-    //     .attr("text-anchor", "middle")
-    //     .text("sdkfjasdkjf")
-
+        
     const node = svg.append("g")
         .selectAll("circle")
         .data(root.descendants().slice(1))
@@ -48,6 +42,8 @@ d3.json("dataJSON2.json").then(function (treeData) {
         })
         .on("click", d => focus !== d && (zoom(d), d3.event.stopPropagation()));
 
+
+        
     const label = svg.append("g")
         .style("font", "12px sans-serif")
         .attr("pointer-events", "none")
@@ -68,6 +64,10 @@ d3.json("dataJSON2.json").then(function (treeData) {
                 return d.data.name;
             }
         });
+
+    // var labelLayout = d3.forceSimulation(label.nodes)
+    //     .force("charge", d3.forceManyBody().strength(-50))
+    //     .force("link", d3.forceLink(label.links).distance(0).strength(2));
 
     zoomTo([root.x, root.y, root.r * 2]);
 
@@ -98,7 +98,7 @@ d3.json("dataJSON2.json").then(function (treeData) {
                 const i = d3.interpolateZoom(view, [focus.x, focus.y, focus.r * 2]);
                 if (focus.x == 350) {
                     label.style("font", function(d) {
-                        return "12px sans-serif"
+                        return "20px sans-serif"
                     })
                 }
                 return t => zoomTo(i(t));
@@ -121,7 +121,7 @@ d3.json("dataJSON2.json").then(function (treeData) {
             });
 
         label.style("font", function(d) {
-                return "7px sans-serif"
+                return "12px sans-serif"
             })
     }
 

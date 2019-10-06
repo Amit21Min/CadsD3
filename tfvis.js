@@ -1,4 +1,4 @@
-d3.json("dataJSON.json").then(function (treeData) {
+d3.json("dataJSON2.json").then(function (treeData) {
     pack = data => d3.pack()
         .size([width, height])
         .padding(3)
@@ -18,6 +18,7 @@ d3.json("dataJSON.json").then(function (treeData) {
     let focus = root;
     let view;
 
+
     const svg = d3.selectAll("body").append("svg")
         .attr("viewBox", `-${width / 2} -${height / 2} ${width} ${height}`)
         .style("display", "block")
@@ -25,6 +26,13 @@ d3.json("dataJSON.json").then(function (treeData) {
         .style("background", color(0))
         .style("cursor", "pointer")
         .on("click", () => zoom(root));
+
+    // svg.append("g")
+    //     .append("text")
+    //     .style("font", "10px sans-serif")
+    //     .attr("pointer-events", "none")
+    //     .attr("text-anchor", "middle")
+    //     .text("sdkfjasdkjf")
 
     const node = svg.append("g")
         .selectAll("circle")
@@ -41,7 +49,7 @@ d3.json("dataJSON.json").then(function (treeData) {
         .on("click", d => focus !== d && (zoom(d), d3.event.stopPropagation()));
 
     const label = svg.append("g")
-        .style("font", "10px sans-serif")
+        .style("font", "8px sans-serif")
         .attr("pointer-events", "none")
         .attr("text-anchor", "middle")
         .selectAll("text")
@@ -49,12 +57,22 @@ d3.json("dataJSON.json").then(function (treeData) {
         .join("text")
         .style("fill-opacity", d => d.parent === root ? 1 : 0)
         .style("display", d => d.parent === root ? "inline" : "none")
-        .text(d => d.data.name);
+        .text(function(d) {
+            if (d.data.name == "B&E") {
+                return "Breaking and Entering";
+            } else if (d.data.name == "LoudMusic") {
+                    return "Noise Complaint";
+            } else if (d.data.name == "XX") {
+                return "Unreported";
+            } else {
+                return d.data.name;
+            }
+        });
 
     zoomTo([root.x, root.y, root.r * 2]);
 
     function zoomTo(v) {
-        const k = width / v[2];
+        const k = width / v[2] / 1.5;
 
         view = v;
 

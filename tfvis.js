@@ -6,8 +6,8 @@ d3.json("dataJSON2.json").then(function (treeData) {
             .sum(d => d.value)
             .sort((a, b) => b.value - a.value))
 
-    width = 932
-    height = width
+    width = 700
+    height = width / 1.3
     format = d3.format(",d")
     color = d3.scaleLinear()
         .domain([0, 5])
@@ -49,7 +49,7 @@ d3.json("dataJSON2.json").then(function (treeData) {
         .on("click", d => focus !== d && (zoom(d), d3.event.stopPropagation()));
 
     const label = svg.append("g")
-        .style("font", "8px sans-serif")
+        .style("font", "12px sans-serif")
         .attr("pointer-events", "none")
         .attr("text-anchor", "middle")
         .selectAll("text")
@@ -72,7 +72,10 @@ d3.json("dataJSON2.json").then(function (treeData) {
     zoomTo([root.x, root.y, root.r * 2]);
 
     function zoomTo(v) {
-        const k = width / v[2] / 1.5;
+
+        
+
+        const k = width / v[2] / 1.3;
 
         view = v;
 
@@ -82,6 +85,9 @@ d3.json("dataJSON2.json").then(function (treeData) {
     }
 
     function zoom(d) {
+
+        label
+
         const focus0 = focus;
 
         focus = d;
@@ -90,7 +96,13 @@ d3.json("dataJSON2.json").then(function (treeData) {
             .duration(d3.event.altKey ? 7500 : 750)
             .tween("zoom", d => {
                 const i = d3.interpolateZoom(view, [focus.x, focus.y, focus.r * 2]);
+                if (focus.x == 350) {
+                    label.style("font", function(d) {
+                        return "12px sans-serif"
+                    })
+                }
                 return t => zoomTo(i(t));
+
             });
 
         label
@@ -98,13 +110,19 @@ d3.json("dataJSON2.json").then(function (treeData) {
                 return d.parent === focus || this.style.display === "inline";
             })
             .transition(transition)
-            .style("fill-opacity", d => d.parent === focus ? 1 : 0)
+            .style("fill-opacity",function(d) {
+                return d.parent === focus ? 1 : 0
+            })
             .on("start", function (d) {
                 if (d.parent === focus) this.style.display = "inline";
             })
             .on("end", function (d) {
                 if (d.parent !== focus) this.style.display = "none";
             });
+
+        label.style("font", function(d) {
+                return "7px sans-serif"
+            })
     }
 
 
